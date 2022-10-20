@@ -1,0 +1,26 @@
+DATABASE ExampleDatabase
+PACKAGE com.example.db
+SERVER ExampleServer
+SCHEMA ToDoList_App
+
+TABLE ToDoList
+   ID               SEQUENCE
+   ListName         CHAR(255)
+   ListType         SHORT (Private=1, Public=2)
+   Description      CHAR(255)
+   LastUpdated      TIMESTAMP
+
+KEY PKEY PRIMARY
+    ID
+
+//Simple CRUD queries are available out of the box with JPortal2
+PROC SelectAll
+PROC Insert Returning
+PROC Update
+PROC SelectOne
+PROC DeleteOne
+
+//You can put take-on or test data in this section
+SQLDATA
+INSERT INTO ToDoList_App.ToDoList(ListName,ListType,Description,LastUpdated) VALUES ('Takeon Test List 1', 1, 'Take on test list description', CURRENT_DATE )
+ENDDATA

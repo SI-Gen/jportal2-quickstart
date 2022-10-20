@@ -1,0 +1,103 @@
+DATABASE ExampleDatabase
+PACKAGE com.example.db
+SERVER ExampleServer
+SCHEMA ToDoList_App
+
+TABLE Person
+   ID               SEQUENCE
+   FirstName        CHAR(255)
+   MiddleName       CHAR(255)
+   Surname          CHAR(255)
+   IDNumber         CHAR(50)
+   Gender           SHORT (Male=1, Female=2, Unspecified=3)
+   DateOfBirth      DATE
+   LastUpdated      TIMESTAMP
+
+KEY PKEY PRIMARY
+    ID
+
+KEY UNQ_IDNumber UNIQUE
+    IDNumber
+
+KEY IDX_Surname_FirstName
+    Surname FirstName
+
+//Simple CRUD queries are available out of the box with JPortal2
+PROC Insert Returning
+PROC Update
+PROC SelectOne
+PROC DeleteOne
+
+PROC SelectOneBy IDNumber
+PROC SelectBy Gender
+
+PROC SelectBy Gender AS SelectNameSurnameByGender
+OUTPUT 
+    FirstName    =
+    Surname =
+
+//More complex custom queries can be defined using standard SQL
+PROC SelectNameSurnameAndGenderAsStringByIDNumber
+INPUT
+    IDNumber    =
+OUTPUT
+    FirstName   =
+    Surname     =
+    Gender      CHAR(250)
+
+SQLCODE
+    SELECT
+        FirstName,
+        Surname,
+        CASE
+            WHEN Gender = 1 THEN 'Male'
+            WHEN Gender = 2 THEN 'Female'
+            WHEN Gender = 3 THEN 'Unspecified'
+            END
+    FROM
+        Person
+    WHERE
+            IDNumber = :IDNumber
+ENDCODE
+
+//Dynamic queries can be done with the ampersand below
+//REMEMBER!!! Dynamic SQL is open to SQL injection! So use with care and make sure to sanitize inputs!
+//Dynamic SQL is a last resort escape hatch, not the first tool to reach for!!
+//In the DAL class created for the below query, a property called MyDynamicWhereClause with length 255 will be created
+//This will allow you to pass through the remainder of the where clause as a string.
+PROC SelectWithDynamicQuery
+INPUT
+    Gender      =
+OUTPUT
+    FirstName   =
+    Surname     =
+    Gender      CHAR(250)
+
+SQLCODE
+    SELECT
+        FirstName,
+        Surname,
+
+SQLCODE
+    SELECT
+        FirstName
+         ,Surname
+         ,Gender
+    FROM
+        ToDoList_App.Person
+    WHERE
+            Gender = :Gender
+      AND &MyDynamicWhereClause(255)
+ENDCODE
+
+//You can put take-on or test data in this section
+SQLDATA
+    INSERT INTO ToDoList_App.Person(FirstName,MiddleName,Surname,IDNumber,Gender, DateOfBirth, LastUpdated) 
+        VALUES ('Johnny', 'B.', 'Goode','0000000000',1,'1960-01-01', CURRENT_DATE );
+    INSERT INTO ToDoList_App.Person(FirstName,MiddleName,Surname,IDNumber,Gender, DateOfBirth, LastUpdated) 
+        VALUES ('Johnny', '', 'Dangerously','1111111111',1,'1970-01-01', CURRENT_DATE );
+    INSERT INTO ToDoList_App.Person(FirstName,MiddleName,Surname,IDNumber,Gender, DateOfBirth, LastUpdated) 
+        VALUES ('A', 'N', 'Other','2222222222',2,'1980-10-10', CURRENT_DATE );
+    INSERT INTO ToDoList_App.Person(FirstName,MiddleName,Surname,IDNumber,Gender, DateOfBirth, LastUpdated) 
+        VALUES ('Fee', 'Fi', 'Fofum','3333333333',3,'1940-04-04', CURRENT_DATE );        
+ENDDATA
