@@ -13,13 +13,33 @@ session = Session(engine)
 
 ### ToDoList ###
 #Select All
-recs = jportal.DB_ToDoListSelectAll.execute(session)
-print(recs)
+def select_all_from_todo_list(session):
+    recs = jportal.DB_ToDoListSelectAll.execute(session)
+    for rec in recs:
+        print(f"ID: {rec.ID}")
+        print(f"ListName: {rec.ListName}")
+        print(f"ListType: {rec.ListType}")
+        print(f"Description: {rec.Description}")
+        print("***")
 
-#Insert
-tdl_ret = jportal.DB_ToDoListInsertReturning.execute(session, 
+### ToDoList ###
+#Insert Returning
+def insert_returning_todo_list(session):
+    #Insert
+    tdl_ret = jportal.DB_ToDoListInsertReturning.execute(session, 
                                                         "ListXXX", 
                                                         jportal.DB_ToDoListInsertReturning.ListTypeEnum.Private,
                                                         "Some Description",
-                                                        datetime.now)
+                                                        datetime.now())
+                                                            
+    return tdl_ret
+
+
+select_all_from_todo_list(session)
+
+tdl_ret = insert_returning_todo_list(session)
 print(f"Added record {tdl_ret.ID} into ToDoList")
+
+select_all_from_todo_list(session)
+
+session.rollback() #For the demo, normally you'd call session.commit() here
