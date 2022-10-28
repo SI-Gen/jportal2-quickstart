@@ -16,33 +16,6 @@ from .common.processing import process_result_recs, process_result_rec, process_
 
 
 
-TODOLIST_SCHEMA = "todolist_app"
-class DB_ToDoList(Base, DBMixin):
-    # Enum for ListType field
-    class ListTypeEnum(enum.Enum):
-        Private = 1
-        Public = 2
-
-        @classmethod
-        def process_result_value_cls(cls, value, dialect):
-            return DB_ToDoList.ListTypeEnum(value)
-
-
-    ID: int = DBColumn("id", sa.Integer(), sa.Sequence("todolist_id_seq", metadata=Base.metadata, schema=TODOLIST_SCHEMA), primary_key=True, autoincrement=False)
-    ListName: str = DBColumn("listname", db_types.NonNullableString(length=255))
-    ListType: ListTypeEnum = DBColumn("listtype", sa.SmallInteger())
-    Description: str = DBColumn("description", db_types.NonNullableString(length=255))
-    LastUpdated: datetime = DBColumn("lastupdated", sa.DateTime(), default=datetime.now, onupdate=datetime.now)
-
-    __schema__ = TODOLIST_SCHEMA
-
-    def __init__(self, ListName: str, ListType: ListTypeEnum, Description: str, LastUpdated: datetime):
-        super(DB_ToDoList, self).__init__(
-            ListName=ListName,
-            ListType=ListType.value if isinstance(ListType, enum.Enum) else ListType,
-            Description=Description,
-            LastUpdated=LastUpdated)
-    # SelectAll yes
 
 @dataclass
 class DB_ToDoListSelectAll:
@@ -100,7 +73,6 @@ class DB_ToDoListSelectAll:
                                         db_types.NonNullableString,
                                         sa.types.DateTime,
                                         ], recs)
-    # Insert yes
 
 @dataclass
 class DB_ToDoListInsertReturning:
@@ -181,7 +153,6 @@ class DB_ToDoListInsertReturning:
                                         ], rec)
 
         return None
-    # Update yes
 
 @dataclass
 class DB_ToDoListUpdate:
@@ -249,7 +220,6 @@ class DB_ToDoListUpdate:
                                         ])
         res = session.execute(cls.get_statement(*params))
         res.close()
-    # SelectOne yes
 
 @dataclass
 class DB_ToDoListSelectOne:
@@ -315,7 +285,6 @@ class DB_ToDoListSelectOne:
                                         ], rec)
 
         return None
-    # DeleteOne yes
 
 @dataclass
 class DB_ToDoListDeleteOne:
@@ -349,7 +318,6 @@ class DB_ToDoListDeleteOne:
                                         ])
         res = session.execute(cls.get_statement(*params))
         res.close()
-    #  no
 
 @dataclass
 class DB_ToDoListStaticData:

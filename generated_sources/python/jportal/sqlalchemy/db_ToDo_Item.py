@@ -16,23 +16,6 @@ from .common.processing import process_result_recs, process_result_rec, process_
 
 
 
-TODO_ITEM_SCHEMA = "todolist_app"
-class DB_ToDo_Item(Base, DBMixin):
-    ID: int = DBColumn("id", sa.Integer(), sa.Sequence("todo_item_id_seq", metadata=Base.metadata, schema=TODO_ITEM_SCHEMA), primary_key=True, autoincrement=False)
-    TodoList_ID: int = DBColumn("todolist_id", sa.Integer())
-    ItemName: str = DBColumn("itemname", db_types.NonNullableString(length=255))
-    ItemDescription: str = DBColumn("itemdescription", sa.Text())
-    LastUpdated: datetime = DBColumn("lastupdated", sa.DateTime(), default=datetime.now, onupdate=datetime.now)
-
-    __schema__ = TODO_ITEM_SCHEMA
-
-    def __init__(self, TodoList_ID: int, ItemName: str, ItemDescription: str, LastUpdated: datetime):
-        super(DB_ToDo_Item, self).__init__(
-            TodoList_ID=TodoList_ID,
-            ItemName=ItemName,
-            ItemDescription=ItemDescription,
-            LastUpdated=LastUpdated)
-    # Insert yes
 
 @dataclass
 class DB_ToDo_ItemInsert:
@@ -91,7 +74,6 @@ class DB_ToDo_ItemInsert:
                                         ])
         res = session.execute(cls.get_statement(*params))
         res.close()
-    # Update yes
 
 @dataclass
 class DB_ToDo_ItemUpdate:
@@ -149,7 +131,6 @@ class DB_ToDo_ItemUpdate:
                                         ])
         res = session.execute(cls.get_statement(*params))
         res.close()
-    # SelectOne yes
 
 @dataclass
 class DB_ToDo_ItemSelectOne:
@@ -205,7 +186,6 @@ class DB_ToDo_ItemSelectOne:
                                         ], rec)
 
         return None
-    # DeleteOne yes
 
 @dataclass
 class DB_ToDo_ItemDeleteOne:
@@ -239,7 +219,6 @@ class DB_ToDo_ItemDeleteOne:
                                         ])
         res = session.execute(cls.get_statement(*params))
         res.close()
-    # SelectByTodoList_ID no
 
 @dataclass
 class DB_ToDo_ItemSelectByTodoList_ID:
@@ -291,7 +270,6 @@ class DB_ToDo_ItemSelectByTodoList_ID:
                                         sa.types.Text,
                                         sa.types.DateTime,
                                         ], recs)
-    # UpdateByItemDescription no
 
 @dataclass
 class DB_ToDo_ItemUpdateByItemDescription:

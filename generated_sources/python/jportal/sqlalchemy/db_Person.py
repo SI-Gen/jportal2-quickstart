@@ -16,40 +16,6 @@ from .common.processing import process_result_recs, process_result_rec, process_
 
 
 
-PERSON_SCHEMA = "todolist_app"
-class DB_Person(Base, DBMixin):
-    # Enum for Gender field
-    class GenderEnum(enum.Enum):
-        Male = 1
-        Female = 2
-        Unspecified = 3
-
-        @classmethod
-        def process_result_value_cls(cls, value, dialect):
-            return DB_Person.GenderEnum(value)
-
-
-    ID: int = DBColumn("id", sa.Integer(), sa.Sequence("person_id_seq", metadata=Base.metadata, schema=PERSON_SCHEMA), primary_key=True, autoincrement=False)
-    FirstName: str = DBColumn("firstname", db_types.NonNullableString(length=255))
-    MiddleName: str = DBColumn("middlename", db_types.NonNullableString(length=255))
-    Surname: str = DBColumn("surname", db_types.NonNullableString(length=255))
-    IDNumber: str = DBColumn("idnumber", db_types.NonNullableString(length=50))
-    Gender: GenderEnum = DBColumn("gender", sa.SmallInteger())
-    DateOfBirth: datetime = DBColumn("dateofbirth", sa.DateTime())
-    LastUpdated: datetime = DBColumn("lastupdated", sa.DateTime(), default=datetime.now, onupdate=datetime.now)
-
-    __schema__ = PERSON_SCHEMA
-
-    def __init__(self, FirstName: str, MiddleName: str, Surname: str, IDNumber: str, Gender: GenderEnum, DateOfBirth: datetime, LastUpdated: datetime):
-        super(DB_Person, self).__init__(
-            FirstName=FirstName,
-            MiddleName=MiddleName,
-            Surname=Surname,
-            IDNumber=IDNumber,
-            Gender=Gender.value if isinstance(Gender, enum.Enum) else Gender,
-            DateOfBirth=DateOfBirth,
-            LastUpdated=LastUpdated)
-    # Insert yes
 
 @dataclass
 class DB_PersonInsertReturning:
@@ -152,7 +118,6 @@ class DB_PersonInsertReturning:
                                         ], rec)
 
         return None
-    # Update yes
 
 @dataclass
 class DB_PersonUpdate:
@@ -239,7 +204,6 @@ class DB_PersonUpdate:
                                         ])
         res = session.execute(cls.get_statement(*params))
         res.close()
-    # SelectOne yes
 
 @dataclass
 class DB_PersonSelectOne:
@@ -318,7 +282,6 @@ class DB_PersonSelectOne:
                                         ], rec)
 
         return None
-    # DeleteOne yes
 
 @dataclass
 class DB_PersonDeleteOne:
@@ -352,7 +315,6 @@ class DB_PersonDeleteOne:
                                         ])
         res = session.execute(cls.get_statement(*params))
         res.close()
-    # SelectOneByIDNumber yes
 
 @dataclass
 class DB_PersonSelectOneByIDNumber:
@@ -435,7 +397,6 @@ class DB_PersonSelectOneByIDNumber:
                                         ], rec)
 
         return None
-    # SelectByGender no
 
 @dataclass
 class DB_PersonSelectByGender:
@@ -525,7 +486,6 @@ class DB_PersonSelectByGender:
                                         sa.types.DateTime,
                                         sa.types.DateTime,
                                         ], recs)
-    # SelectNameSurnameByGender yes
 
 @dataclass
 class DB_PersonSelectNameSurnameByGender:
@@ -580,7 +540,6 @@ class DB_PersonSelectNameSurnameByGender:
         return process_result_recs(DB_PersonSelectNameSurnameByGender, session, [db_types.NonNullableString,
                                         db_types.NonNullableString,
                                         ], recs)
-    # SelectNameSurnameAndGenderAsStringByIDNumber no
 
 @dataclass
 class DB_PersonSelectNameSurnameAndGenderAsStringByIDNumber:
@@ -634,7 +593,6 @@ class DB_PersonSelectNameSurnameAndGenderAsStringByIDNumber:
                                         db_types.NonNullableString,
                                         db_types.NonNullableString,
                                         ], recs)
-    # SelectWithDynamicQuery no
 
 @dataclass
 class DB_PersonSelectWithDynamicQuery:
@@ -703,7 +661,6 @@ class DB_PersonSelectWithDynamicQuery:
                                         db_types.NonNullableString,
                                         db_types.NonNullableString,
                                         ], recs)
-    #  no
 
 @dataclass
 class DB_PersonStaticData:

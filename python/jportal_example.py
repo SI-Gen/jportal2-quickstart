@@ -1,7 +1,7 @@
 from datetime import datetime
 import sys
 print("PYTHONPATH=",sys.path)
-import jportal as jportal
+import jportal.sqlalchemy as jportal
 import sqlalchemy as sa
 from sqlalchemy.orm import Session
 
