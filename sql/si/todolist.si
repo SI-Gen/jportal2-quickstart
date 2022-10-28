@@ -14,13 +14,13 @@ KEY PKEY PRIMARY
     ID
 
 //Simple CRUD queries are available out of the box with JPortal2
-PROC SelectAll
 PROC Insert Returning
 PROC Update
 PROC SelectOne
 PROC DeleteOne
+PROC SelectAll
 
 //You can put take-on or test data in this section
 SQLDATA
-INSERT INTO ToDoList_App.ToDoList(ListName,ListType,Description,LastUpdated) VALUES ('Takeon Test List 1', 1, 'Take on test list description', CURRENT_DATE )
+INSERT INTO ToDoList_App.ToDoList(ListName,ListType,Description,LastUpdated) VALUES ('Takeon Test List 1', 1, 'Take on test list description', CURRENT_DATE );
 ENDDATA

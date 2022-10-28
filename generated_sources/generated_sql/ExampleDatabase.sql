@@ -21,7 +21,7 @@ ALTER TABLE ToDoList_App.ToDoList
   )
 ;
 
-INSERT INTO ToDoList_App.ToDoList(ListName,ListType,Description,LastUpdated) VALUES ('Takeon Test List 1', 1, 'Take on test list description', CURRENT_DATE )
+INSERT INTO ToDoList_App.ToDoList(ListName,ListType,Description,LastUpdated) VALUES ('Takeon Test List 1', 1, 'Take on test list description', CURRENT_DATE );
 
 DROP TABLE IF EXISTS ToDoList_App.ToDo_Item CASCADE;
 

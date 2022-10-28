@@ -18,63 +18,6 @@ from .common.processing import process_result_recs, process_result_rec, process_
 
 
 @dataclass
-class DB_ToDoListSelectAll:
-    # Enum for ListType field
-    class ListTypeEnum(enum.Enum):
-        Private = 1
-        Public = 2
-
-        @classmethod
-        def process_result_value_cls(cls, value, dialect):
-            return DB_ToDoListSelectAll.ListTypeEnum(value)
-
-
-    #Outputs
-    ID: int
-    ListName: str
-    ListType: ListTypeEnum
-    Description: str
-    LastUpdated: datetime
-
-    @classmethod
-    def get_statement(cls
-                     ) -> TextAsFrom:
-        class _ret:
-            sequence = "default," #postgres uses default for sequences
-            output = " OUTPUT (ID,ListName,ListType,Description,LastUpdated)"
-            tail = " RETURNING ID ListName ListType Description LastUpdated"
-            #session.bind.dialect.name
-
-        statement = sa.text(
-                        f"/* PROC ToDoList_App.ToDoList.SelectAll */"
-                        f"select"
-                        f"  ID"
-                        f", ListName"
-                        f", ListType"
-                        f", Description"
-                        f", LastUpdated"
-                        f" from ToDoList_App.ToDoList")
-
-        text_statement = statement.columns(ID=sa.types.Integer,
-                                      ListName=db_types.NonNullableString,
-                                      ListType=sa.types.SmallInteger,
-                                      Description=db_types.NonNullableString,
-                                      LastUpdated=sa.types.DateTime,
-                                      )
-        return text_statement
-
-    @classmethod
-    def execute(cls, session: Session) -> List['DB_ToDoListSelectAll']:
-        res = session.execute(cls.get_statement())
-        recs = res.fetchall()
-        return process_result_recs(DB_ToDoListSelectAll, session, [sa.types.Integer,
-                                        db_types.NonNullableString,
-                                        DB_ToDoListSelectAll.ListTypeEnum,
-                                        db_types.NonNullableString,
-                                        sa.types.DateTime,
-                                        ], recs)
-
-@dataclass
 class DB_ToDoListInsertReturning:
     # Enum for ListType field
     class ListTypeEnum(enum.Enum):
@@ -320,6 +263,63 @@ class DB_ToDoListDeleteOne:
         res.close()
 
 @dataclass
+class DB_ToDoListSelectAll:
+    # Enum for ListType field
+    class ListTypeEnum(enum.Enum):
+        Private = 1
+        Public = 2
+
+        @classmethod
+        def process_result_value_cls(cls, value, dialect):
+            return DB_ToDoListSelectAll.ListTypeEnum(value)
+
+
+    #Outputs
+    ID: int
+    ListName: str
+    ListType: ListTypeEnum
+    Description: str
+    LastUpdated: datetime
+
+    @classmethod
+    def get_statement(cls
+                     ) -> TextAsFrom:
+        class _ret:
+            sequence = "default," #postgres uses default for sequences
+            output = " OUTPUT (ID,ListName,ListType,Description,LastUpdated)"
+            tail = " RETURNING ID ListName ListType Description LastUpdated"
+            #session.bind.dialect.name
+
+        statement = sa.text(
+                        f"/* PROC ToDoList_App.ToDoList.SelectAll */"
+                        f"select"
+                        f"  ID"
+                        f", ListName"
+                        f", ListType"
+                        f", Description"
+                        f", LastUpdated"
+                        f" from ToDoList_App.ToDoList")
+
+        text_statement = statement.columns(ID=sa.types.Integer,
+                                      ListName=db_types.NonNullableString,
+                                      ListType=sa.types.SmallInteger,
+                                      Description=db_types.NonNullableString,
+                                      LastUpdated=sa.types.DateTime,
+                                      )
+        return text_statement
+
+    @classmethod
+    def execute(cls, session: Session) -> List['DB_ToDoListSelectAll']:
+        res = session.execute(cls.get_statement())
+        recs = res.fetchall()
+        return process_result_recs(DB_ToDoListSelectAll, session, [sa.types.Integer,
+                                        db_types.NonNullableString,
+                                        DB_ToDoListSelectAll.ListTypeEnum,
+                                        db_types.NonNullableString,
+                                        sa.types.DateTime,
+                                        ], recs)
+
+@dataclass
 class DB_ToDoListStaticData:
     
 
@@ -333,7 +333,7 @@ class DB_ToDoListStaticData:
             #session.bind.dialect.name
 
         statement = sa.text(
-                        f"INSERT INTO ToDoList_App.ToDoList(ListName,ListType,Description,LastUpdated) VALUES ('Takeon Test List 1', 1, 'Take on test list description', CURRENT_DATE )")
+                        f"INSERT INTO ToDoList_App.ToDoList(ListName,ListType,Description,LastUpdated) VALUES ('Takeon Test List 1', 1, 'Take on test list description', CURRENT_DATE );")
 
         text_statement = statement.columns()
         return text_statement
