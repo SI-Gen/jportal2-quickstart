@@ -63,10 +63,6 @@
 	//"containerUser": ""
 	"overrideCommand": false,
 	"containerEnv": {
-		"PYTHONPATH": "/usr/bin/python3:/workspaces/jportal2-quickstart/generated_sources/python/"
-	},
-	"remoteEnv": {
-		"PATH": "${containerEnv:PATH}:/some/other/path",
-		"PYTHONPATH": "${containerEnv:PYTHONPATH}"
+		"python.pythonPath": "$PYTHONPATH:/workspaces/jportal2-quickstart/generated_sources/python/",
 	} 
 }
