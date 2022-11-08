@@ -14,6 +14,8 @@ TABLE ToDo_Item
 KEY PKEY PRIMARY
     ID
 
+LINK ToDoList TodoList_ID
+
 //We do a normal Insert and Update without a Returning here, to test the regular generaion
 //We do an InsertReturning and UpdateReturning in the ToDoList table to test that generation there
 PROC Insert
@@ -24,12 +26,48 @@ PROC DeleteOne
 //The SelectBy function automatically creates
 //a SELECT query using the given fields as the
 //WHERE clause
-PROC SelectBy TodoList_ID
+PROC SelectBy TodoList_ID RETURNING ID ItemName ItemDescription LastUpdated
+
+
+PROC UpdateBy ItemName SET ItemDescription 
+
+PROC GetItemsWithListNameForID
+INPUT
+    ID              =
 OUTPUT
-    ID                  =
-    ItemName            =
-    ItemDescription     =
-    LastUpdated         =
+    ListName        CHAR(255)
+    ItemName        =
+    ItemDescription =
+SQLCODE
+    SELECT  
+            l.ListName,
+            i.ItemName,
+            i.ItemDescription
+    FROM
+            ToDoList_App.ToDoList l 
+            INNER JOIN
+            ToDoList_App.ToDo_Item i
+            ON l.ID = i.TodoList_ID
+    WHERE i.ID =  :ID
+ENDCODE
 
 
-PROC UpdateBy ItemName SET ItemName ItemDescription 
+PROC SelectWithDynamicQuery
+INPUT
+    ID              =
+OUTPUT
+    ItemName        =
+    ItemDescription =
+    LastUpdated     =
+SQLCODE
+    SELECT 
+        ItemName,
+        ItemDescription,
+        LastUpdated
+    FROM
+        ToDoList_App.ToDo_Item i
+    WHERE
+        i.ID = :ID
+    AND
+        ItemName IN (&ItemNamesList(1024))
+ENDCODE

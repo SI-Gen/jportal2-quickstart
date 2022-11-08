@@ -14,11 +14,38 @@ KEY PKEY PRIMARY
     ID
 
 //Simple CRUD queries are available out of the box with JPortal2
-PROC Insert Returning
-PROC Update
+PROC BulkInsert
+PROC BulkUpdate
+PROC UpdateBy ListName SET ListType Description AS UpdateListTypeDescriptionByListName
+PROC UpdateBy ListName
 PROC SelectOne
 PROC DeleteOne
 PROC SelectAll
+PROC Count
+PROC Exists
+PROC DeleteAll
+//PROC DeleteBy ListName ListType
+
+
+PROC EnumExampleReturnAllPublicLists
+INPUT   
+    ID =
+OUTPUT
+    ID          =
+    ListName    =
+    ListType    =
+SQLCODE
+    SELECT 
+            ID,
+            ListName,
+            ListType
+    FROM    
+            ToDoList
+    WHERE   
+            ListType = %ListType.Public%
+ENDCODE
+
+
 
 //You can put take-on or test data in this section
 SQLDATA

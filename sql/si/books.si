@@ -1,0 +1,52 @@
+DATABASE ExampleDatabase
+PACKAGE com.example.db
+SERVER ExampleServer
+SCHEMA BooksAndAuthors
+
+TABLE Books
+   ID               SEQUENCE
+   AuthorID         INT
+   Title            CHAR(255)
+   PublishDate      DATE
+   LastUpdated      TIMESTAMP
+
+KEY PKEY PRIMARY
+    ID
+
+LINK Authors DELETE CASCADE AuthorID 
+
+GRANT ALL to db_user
+
+VIEW bookview TO db_user
+OUTPUT
+    ID  
+    AuthorID 
+CODE
+"SELECT ID, AuthorID from Books"
+ENDCODE
+
+PROC SelectBookAndAuthorDetails
+** This proc selects books and their authors for titles like
+** :TitleLike. You can pass in a wildcard into TitleLike eg TitleLike = 'ABC%'
+INPUT
+    TitleLike   CHAR(255)
+OUTPUT
+    Bio             CHAR(255)
+    Title           =
+    PublishDate     =
+    LastUpdated     =
+SQLCODE
+    SELECT
+        a.Bio,
+        b.Title,
+        b.PublishDate,
+        b.LastUpdated
+    FROM
+        Authors a
+            INNER JOIN
+        Books b
+            ON a.ID = b.AuthorID
+    WHERE
+        b.Title LIKE :TitleLike
+ENDCODE
+
